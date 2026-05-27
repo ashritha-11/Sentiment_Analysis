@@ -48,86 +48,139 @@ theme = st.sidebar.toggle("🌙 Dark Mode")
 # LIGHT THEME CSS
 # ============================================================
 
+# ============================================================
+# LIGHT THEME CSS
+# ============================================================
+
 light_css = """
 <style>
+
+/* MAIN APP */
 
 .stApp {
     background-color: #F4F7FC;
     color: #111111;
 }
 
+/* SIDEBAR */
+
+[data-testid="stSidebar"] {
+    background-color: #FFFFFF;
+    border-right: 1px solid #E0E0E0;
+}
+
+[data-testid="stSidebar"] * {
+    color: #111111 !important;
+}
+
+/* TITLES */
+
 .main-title {
     text-align: center;
-    font-size: 52px;
+    font-size: 58px;
     font-weight: 800;
     color: #512DA8;
-    margin-bottom: 5px;
+    margin-top: 10px;
+    margin-bottom: 8px;
 }
 
 .subtitle {
     text-align: center;
     color: #555555;
-    font-size: 20px;
-    margin-bottom: 30px;
+    font-size: 22px;
+    margin-bottom: 35px;
 }
+
+/* CARDS */
 
 .card {
-    background: white;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    background: #FFFFFF;
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 18px rgba(0,0,0,0.08);
     margin-bottom: 25px;
-    color: #111111;
 }
 
+/* METRIC CARDS */
+
 .metric-card {
-    background: linear-gradient(to right, #5E35B1, #7E57C2);
-    padding: 20px;
-    border-radius: 15px;
+    background: linear-gradient(135deg, #673AB7, #9C27B0);
+    padding: 28px;
+    border-radius: 20px;
     text-align: center;
-    color: white;
+    color: white !important;
+    box-shadow: 0px 5px 18px rgba(103,58,183,0.35);
 }
 
 .metric-card h2 {
     color: white !important;
+    font-size: 48px;
+    margin-bottom: 10px;
 }
 
+/* TEXTAREA */
+
 textarea {
-    background-color: white !important;
-    color: black !important;
-    border-radius: 12px !important;
-    border: 2px solid #673AB7 !important;
+    background-color: #FFFFFF !important;
+    color: #111111 !important;
+    border-radius: 16px !important;
+    border: 2px solid #7E57C2 !important;
     font-size: 18px !important;
+    padding: 12px !important;
 }
 
 textarea::placeholder {
-    color: #666 !important;
+    color: #777777 !important;
 }
 
-.stButton>button {
+/* BUTTON */
+
+.stButton > button {
     width: 100%;
-    height: 3.5em;
-    border-radius: 12px;
+    height: 3.6em;
+    border-radius: 14px;
     border: none;
     background: linear-gradient(to right, #673AB7, #8E24AA);
     color: white;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
+    transition: 0.3s ease;
 }
 
-.stMarkdown,
-.stText,
-label,
-p,
-div,
-span {
+.stButton > button:hover {
+    transform: scale(1.01);
+    background: linear-gradient(to right, #5E35B1, #7B1FA2);
+}
+
+/* TEXT VISIBILITY */
+
+h1, h2, h3, h4, h5, h6,
+p, span, div, label {
     color: #111111 !important;
 }
 
+/* METRICS */
+
+[data-testid="metric-container"] {
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    border: 1px solid #ECECEC;
+}
+
+/* FOOTER */
+
 .footer {
     text-align: center;
-    color: #666666;
-    margin-top: 30px;
+    color: #666666 !important;
+    margin-top: 40px;
+    font-size: 16px;
+}
+
+/* REMOVE EXTRA TOP SPACE */
+
+.block-container {
+    padding-top: 1rem;
 }
 
 </style>
@@ -140,87 +193,137 @@ span {
 dark_css = """
 <style>
 
+/* MAIN APP */
+
 .stApp {
-    background-color: #0E1117;
+    background-color: #0B1120;
     color: #FAFAFA;
 }
 
+/* SIDEBAR */
+
+[data-testid="stSidebar"] {
+    background-color: #111827;
+    border-right: 1px solid #1F2937;
+}
+
+[data-testid="stSidebar"] * {
+    color: #FAFAFA !important;
+}
+
+/* TITLES */
+
 .main-title {
     text-align: center;
-    font-size: 52px;
+    font-size: 58px;
     font-weight: 800;
-    color: #BB86FC;
-    margin-bottom: 5px;
+    color: #E9D5FF;
+    margin-top: 10px;
+    margin-bottom: 8px;
 }
 
 .subtitle {
     text-align: center;
-    color: #D0D0D0;
-    font-size: 20px;
-    margin-bottom: 30px;
+    color: #D1D5DB;
+    font-size: 22px;
+    margin-bottom: 35px;
 }
+
+/* CARDS */
 
 .card {
-    background: #161B22;
-    padding: 25px;
-    border-radius: 18px;
-    box-shadow: 0px 4px 12px rgba(255,255,255,0.05);
+    background: #111827;
+    padding: 28px;
+    border-radius: 20px;
+    border: 1px solid #1F2937;
     margin-bottom: 25px;
-    color: #FAFAFA !important;
 }
 
+/* METRIC CARDS */
+
 .metric-card {
-    background: linear-gradient(to right, #7B1FA2, #9C27B0);
-    padding: 20px;
-    border-radius: 15px;
+    background: linear-gradient(135deg, #7B1FA2, #AB47BC);
+    padding: 28px;
+    border-radius: 20px;
     text-align: center;
-    color: white;
+    color: white !important;
+    box-shadow: 0px 5px 18px rgba(171,71,188,0.30);
 }
 
 .metric-card h2 {
     color: white !important;
+    font-size: 48px;
+    margin-bottom: 10px;
 }
+
+/* TEXTAREA */
 
 textarea {
     background-color: #1F2937 !important;
-    color: white !important;
-    border-radius: 12px !important;
+    color: #FAFAFA !important;
+    border-radius: 16px !important;
     border: 2px solid #BB86FC !important;
     font-size: 18px !important;
+    padding: 12px !important;
 }
 
 textarea::placeholder {
-    color: #BBBBBB !important;
+    color: #A1A1AA !important;
 }
 
-.stButton>button {
+/* BUTTON */
+
+.stButton > button {
     width: 100%;
-    height: 3.5em;
-    border-radius: 12px;
+    height: 3.6em;
+    border-radius: 14px;
     border: none;
     background: linear-gradient(to right, #7B1FA2, #AB47BC);
     color: white;
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
+    transition: 0.3s ease;
 }
 
-.stMarkdown,
-.stText,
-label,
-p,
-div,
-span {
+.stButton > button:hover {
+    transform: scale(1.01);
+    background: linear-gradient(to right, #6A1B9A, #9C27B0);
+}
+
+/* TEXT VISIBILITY */
+
+h1, h2, h3, h4, h5, h6,
+p, span, div, label {
     color: #FAFAFA !important;
 }
 
+/* METRICS */
+
+[data-testid="metric-container"] {
+    background-color: #111827;
+    border-radius: 15px;
+    padding: 10px;
+    border: 1px solid #1F2937;
+}
+
+/* FOOTER */
+
 .footer {
     text-align: center;
-    color: #CCCCCC;
-    margin-top: 30px;
+    color: #D1D5DB !important;
+    margin-top: 40px;
+    font-size: 16px;
+}
+
+/* REMOVE EXTRA TOP SPACE */
+
+.block-container {
+    padding-top: 1rem;
 }
 
 </style>
 """
+
 
 # ============================================================
 # APPLY THEME
