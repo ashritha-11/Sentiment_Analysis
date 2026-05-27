@@ -1,6 +1,6 @@
 # ============================================================
 # AI-Based Mental Health Sentiment Monitoring System
-# Clean Professional Streamlit Application
+# Professional Streamlit Application
 # ============================================================
 
 # =========================
@@ -32,16 +32,17 @@ nltk.download('stopwords')
 # =========================
 
 st.set_page_config(
-    page_title="Mental Health AI",
+    page_title="Mental Health AI Monitor",
     page_icon="🧠",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # ============================================================
 # THEME TOGGLE
 # ============================================================
 
-dark_mode = st.sidebar.toggle("🌙 Dark Mode")
+theme = st.sidebar.toggle("🌙 Dark Mode")
 
 # ============================================================
 # LIGHT THEME CSS
@@ -51,22 +52,22 @@ light_css = """
 <style>
 
 .stApp {
-    background-color: #F4F6F9;
-    color: black;
+    background-color: #F4F7FC;
+    color: #111111;
 }
 
 .main-title {
     text-align: center;
-    font-size: 48px;
+    font-size: 52px;
     font-weight: 800;
-    color: #5E35B1;
-    margin-bottom: 0px;
+    color: #512DA8;
+    margin-bottom: 5px;
 }
 
 .subtitle {
     text-align: center;
+    color: #555555;
     font-size: 20px;
-    color: #666666;
     margin-bottom: 30px;
 }
 
@@ -75,20 +76,37 @@ light_css = """
     padding: 25px;
     border-radius: 18px;
     box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    color: #111111;
 }
 
 .metric-card {
-    background: linear-gradient(to right, #673AB7, #7E57C2);
+    background: linear-gradient(to right, #5E35B1, #7E57C2);
     padding: 20px;
     border-radius: 15px;
-    color: white;
     text-align: center;
+    color: white;
+}
+
+.metric-card h2 {
+    color: white !important;
+}
+
+textarea {
+    background-color: white !important;
+    color: black !important;
+    border-radius: 12px !important;
+    border: 2px solid #673AB7 !important;
+    font-size: 18px !important;
+}
+
+textarea::placeholder {
+    color: #666 !important;
 }
 
 .stButton>button {
     width: 100%;
-    height: 3.3em;
+    height: 3.5em;
     border-radius: 12px;
     border: none;
     background: linear-gradient(to right, #673AB7, #8E24AA);
@@ -97,15 +115,18 @@ light_css = """
     font-weight: bold;
 }
 
-textarea {
-    border-radius: 12px !important;
-    border: 2px solid #673AB7 !important;
-    font-size: 18px !important;
+.stMarkdown,
+.stText,
+label,
+p,
+div,
+span {
+    color: #111111 !important;
 }
 
 .footer {
     text-align: center;
-    color: gray;
+    color: #666666;
     margin-top: 30px;
 }
 
@@ -121,21 +142,21 @@ dark_css = """
 
 .stApp {
     background-color: #0E1117;
-    color: white;
+    color: #FAFAFA;
 }
 
 .main-title {
     text-align: center;
-    font-size: 48px;
+    font-size: 52px;
     font-weight: 800;
     color: #BB86FC;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
 }
 
 .subtitle {
     text-align: center;
+    color: #D0D0D0;
     font-size: 20px;
-    color: #CCCCCC;
     margin-bottom: 30px;
 }
 
@@ -144,21 +165,37 @@ dark_css = """
     padding: 25px;
     border-radius: 18px;
     box-shadow: 0px 4px 12px rgba(255,255,255,0.05);
-    margin-bottom: 20px;
-    color: white;
+    margin-bottom: 25px;
+    color: #FAFAFA !important;
 }
 
 .metric-card {
     background: linear-gradient(to right, #7B1FA2, #9C27B0);
     padding: 20px;
     border-radius: 15px;
-    color: white;
     text-align: center;
+    color: white;
+}
+
+.metric-card h2 {
+    color: white !important;
+}
+
+textarea {
+    background-color: #1F2937 !important;
+    color: white !important;
+    border-radius: 12px !important;
+    border: 2px solid #BB86FC !important;
+    font-size: 18px !important;
+}
+
+textarea::placeholder {
+    color: #BBBBBB !important;
 }
 
 .stButton>button {
     width: 100%;
-    height: 3.3em;
+    height: 3.5em;
     border-radius: 12px;
     border: none;
     background: linear-gradient(to right, #7B1FA2, #AB47BC);
@@ -167,12 +204,13 @@ dark_css = """
     font-weight: bold;
 }
 
-textarea {
-    border-radius: 12px !important;
-    border: 2px solid #BB86FC !important;
-    background-color: #1E1E1E !important;
-    color: white !important;
-    font-size: 18px !important;
+.stMarkdown,
+.stText,
+label,
+p,
+div,
+span {
+    color: #FAFAFA !important;
 }
 
 .footer {
@@ -188,13 +226,13 @@ textarea {
 # APPLY THEME
 # ============================================================
 
-if dark_mode:
+if theme:
     st.markdown(dark_css, unsafe_allow_html=True)
 else:
     st.markdown(light_css, unsafe_allow_html=True)
 
 # ============================================================
-# DOWNLOAD MODEL
+# DOWNLOAD MODEL FROM GOOGLE DRIVE
 # ============================================================
 
 MODEL_FILE = "mental_health_rnn_model.h5"
@@ -212,13 +250,21 @@ if not os.path.exists(MODEL_FILE):
     )
 
 # ============================================================
-# LOAD MODEL & FILES
+# LOAD MODEL
 # ============================================================
 
 model = load_model(MODEL_FILE)
 
+# ============================================================
+# LOAD TOKENIZER
+# ============================================================
+
 with open("tokenizer.pkl", "rb") as file:
     tokenizer = pickle.load(file)
+
+# ============================================================
+# LOAD LABEL ENCODER
+# ============================================================
 
 with open("label_encoder.pkl", "rb") as file:
     encoder = pickle.load(file)
@@ -287,16 +333,21 @@ def predict_emotion(text):
 
 with st.sidebar:
 
+    st.image(
+        "https://cdn-icons-png.flaticon.com/512/2785/2785819.png",
+        width=100
+    )
+
     st.title("🧠 Mental Health AI")
 
     st.markdown("""
-    ### System Features
+    ### Features
     
     ✔ Emotion Detection  
-    ✔ Confidence Analysis  
-    ✔ NLP Processing  
-    ✔ RNN Prediction  
-    ✔ Wellness Guidance
+    ✔ Sentiment Analysis  
+    ✔ Confidence Score  
+    ✔ Deep Learning Prediction  
+    ✔ Emotional Guidance
     """)
 
     st.markdown("---")
@@ -320,12 +371,12 @@ Emotion Detection using NLP & Deep Learning
 """, unsafe_allow_html=True)
 
 # ============================================================
-# METRICS SECTION
+# TOP METRICS
 # ============================================================
 
-m1, m2, m3, m4 = st.columns(4)
+col1, col2, col3, col4 = st.columns(4)
 
-with m1:
+with col1:
     st.markdown("""
     <div class='metric-card'>
     <h2>94%</h2>
@@ -333,15 +384,15 @@ with m1:
     </div>
     """, unsafe_allow_html=True)
 
-with m2:
+with col2:
     st.markdown("""
     <div class='metric-card'>
-    <h2>7+</h2>
+    <h2>7</h2>
     Emotions
     </div>
     """, unsafe_allow_html=True)
 
-with m3:
+with col3:
     st.markdown("""
     <div class='metric-card'>
     <h2>RNN</h2>
@@ -349,7 +400,7 @@ with m3:
     </div>
     """, unsafe_allow_html=True)
 
-with m4:
+with col4:
     st.markdown("""
     <div class='metric-card'>
     <h2>NLP</h2>
@@ -366,7 +417,7 @@ st.write("")
 left, right = st.columns([2,1])
 
 # ============================================================
-# INPUT SECTION
+# LEFT SECTION
 # ============================================================
 
 with left:
@@ -375,7 +426,7 @@ with left:
     <div class='card'>
     """, unsafe_allow_html=True)
 
-    st.subheader("✍️ Analyze Emotion")
+    st.subheader("✍️ Analyze Your Emotion")
 
     user_input = st.text_area(
         "",
@@ -397,15 +448,15 @@ with right:
     <div class='card'>
     """, unsafe_allow_html=True)
 
-    st.subheader("💡 Emotional Wellness Tips")
+    st.subheader("💡 Wellness Tips")
 
     st.info("""
-    ✔ Stay hydrated  
-    ✔ Practice mindfulness  
-    ✔ Take regular breaks  
-    ✔ Sleep properly  
-    ✔ Stay socially connected
-    """)
+✔ Stay hydrated  
+✔ Practice mindfulness  
+✔ Sleep properly  
+✔ Exercise regularly  
+✔ Stay socially connected
+""")
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -450,23 +501,23 @@ if analyze:
         with c3:
 
             if confidence >= 90:
-                signal = "Strong"
+                status = "Strong"
 
             elif confidence >= 70:
-                signal = "Moderate"
+                status = "Moderate"
 
             else:
-                signal = "Low"
+                status = "Low"
 
             st.metric(
                 "Signal",
-                signal
+                status
             )
 
         st.markdown("</div>", unsafe_allow_html=True)
 
         # ====================================================
-        # CHART SECTION
+        # VISUALIZATION
         # ====================================================
 
         st.markdown("""
@@ -479,9 +530,9 @@ if analyze:
 
         fig, ax = plt.subplots(figsize=(10,4))
 
-        ax.bar(class_labels, probabilities)
+        bars = ax.bar(class_labels, probabilities)
 
-        ax.set_xlabel("Emotion")
+        ax.set_xlabel("Emotions")
 
         ax.set_ylabel("Probability")
 
@@ -494,43 +545,42 @@ if analyze:
         st.markdown("</div>", unsafe_allow_html=True)
 
         # ====================================================
-        # GUIDANCE SECTION
+        # GUIDANCE
         # ====================================================
 
         st.markdown("""
         <div class='card'>
         """, unsafe_allow_html=True)
 
-        st.subheader("💙 Wellness Guidance")
+        st.subheader("💙 Emotional Guidance")
 
         emotion_lower = emotion.lower()
 
         if "depression" in emotion_lower or "sad" in emotion_lower:
 
             st.error("""
-Take a short break, talk to supportive people,
-and engage in calming activities.
+Take breaks, practice self-care,
+and talk to trusted people.
 """)
 
         elif "anxiety" in emotion_lower or "stress" in emotion_lower:
 
             st.warning("""
-Practice mindfulness, deep breathing,
-and relaxation exercises.
+Practice mindfulness,
+deep breathing, and relaxation techniques.
 """)
 
         elif "happy" in emotion_lower or "positive" in emotion_lower:
 
             st.success("""
 Positive emotional state detected.
-Continue healthy and motivating activities.
+Keep doing activities that motivate you.
 """)
 
         else:
 
             st.info("""
-Maintain emotional balance,
-healthy sleep, and regular exercise.
+Maintain healthy habits and emotional balance.
 """)
 
         st.markdown("</div>", unsafe_allow_html=True)
@@ -546,7 +596,7 @@ st.markdown("""
 
 🧠 AI-Based Mental Health Monitoring System
 
-Built using TensorFlow • NLP • RNN • Streamlit
+Built with TensorFlow • NLP • RNN • Streamlit
 
 </div>
 """, unsafe_allow_html=True)
