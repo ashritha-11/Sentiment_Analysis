@@ -1,6 +1,6 @@
 # ============================================================
 # AI-Based Mental Health Sentiment Monitoring System
-# Professional Streamlit Web Application
+# Professional Streamlit Application with Dark/Light Theme
 # ============================================================
 
 # =========================
@@ -14,7 +14,6 @@ import pickle
 import re
 import nltk
 import matplotlib.pyplot as plt
-import pandas as pd
 import gdown
 import os
 
@@ -29,7 +28,7 @@ from tensorflow.keras.models import load_model
 nltk.download('stopwords')
 
 # =========================
-# PAGE CONFIGURATION
+# PAGE CONFIG
 # =========================
 
 st.set_page_config(
@@ -39,32 +38,34 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# =========================
-# CUSTOM CSS STYLING
-# =========================
+# ============================================================
+# THEME SELECTION
+# ============================================================
 
-st.markdown("""
+theme = st.sidebar.selectbox(
+    "🎨 Select Theme",
+    ["Light Mode", "Dark Mode"]
+)
+
+# ============================================================
+# LIGHT THEME CSS
+# ============================================================
+
+light_theme = """
 <style>
 
-html, body, [class*="css"]  {
-    font-family: 'Segoe UI', sans-serif;
-}
-
-/* Main background */
 .stApp {
     background: linear-gradient(to right, #eef2f3, #dfe9f3);
+    color: black;
 }
 
-/* Main title */
 .main-title {
     text-align: center;
     font-size: 48px;
     font-weight: bold;
     color: #4A148C;
-    margin-bottom: 5px;
 }
 
-/* Subtitle */
 .sub-title {
     text-align: center;
     font-size: 22px;
@@ -72,7 +73,6 @@ html, body, [class*="css"]  {
     margin-bottom: 30px;
 }
 
-/* Cards */
 .card {
     background-color: white;
     padding: 25px;
@@ -81,15 +81,6 @@ html, body, [class*="css"]  {
     margin-bottom: 25px;
 }
 
-/* Text area */
-textarea {
-    border-radius: 15px !important;
-    border: 2px solid #6A1B9A !important;
-    padding: 15px !important;
-    font-size: 18px !important;
-}
-
-/* Button */
 .stButton>button {
     width: 100%;
     background: linear-gradient(to right, #6A1B9A, #8E24AA);
@@ -101,7 +92,13 @@ textarea {
     font-weight: bold;
 }
 
-/* Prediction boxes */
+textarea {
+    border-radius: 15px !important;
+    border: 2px solid #6A1B9A !important;
+    padding: 15px !important;
+    font-size: 18px !important;
+}
+
 .result-box {
     padding: 20px;
     border-radius: 15px;
@@ -112,16 +109,97 @@ textarea {
     margin-top: 15px;
 }
 
-/* Footer */
 .footer {
     text-align: center;
     color: #555;
     padding-top: 20px;
-    font-size: 16px;
 }
 
 </style>
-""", unsafe_allow_html=True)
+"""
+
+# ============================================================
+# DARK THEME CSS
+# ============================================================
+
+dark_theme = """
+<style>
+
+.stApp {
+    background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+    color: white;
+}
+
+.main-title {
+    text-align: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: #BB86FC;
+}
+
+.sub-title {
+    text-align: center;
+    font-size: 22px;
+    color: #D1C4E9;
+    margin-bottom: 30px;
+}
+
+.card {
+    background-color: #1E1E1E;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 15px rgba(255,255,255,0.1);
+    margin-bottom: 25px;
+    color: white;
+}
+
+.stButton>button {
+    width: 100%;
+    background: linear-gradient(to right, #7B1FA2, #9C27B0);
+    color: white;
+    border-radius: 12px;
+    height: 3.5em;
+    font-size: 20px;
+    border: none;
+    font-weight: bold;
+}
+
+textarea {
+    border-radius: 15px !important;
+    border: 2px solid #BB86FC !important;
+    padding: 15px !important;
+    font-size: 18px !important;
+    background-color: #2A2A2A !important;
+    color: white !important;
+}
+
+.result-box {
+    padding: 20px;
+    border-radius: 15px;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.footer {
+    text-align: center;
+    color: #E0E0E0;
+    padding-top: 20px;
+}
+
+</style>
+"""
+
+# ============================================================
+# APPLY THEME
+# ============================================================
+
+if theme == "Dark Mode":
+    st.markdown(dark_theme, unsafe_allow_html=True)
+else:
+    st.markdown(light_theme, unsafe_allow_html=True)
 
 # ============================================================
 # DOWNLOAD MODEL FROM GOOGLE DRIVE
@@ -141,40 +219,40 @@ if not os.path.exists(MODEL_FILE):
         quiet=False
     )
 
-# =========================
+# ============================================================
 # LOAD MODEL
-# =========================
+# ============================================================
 
 model = load_model(MODEL_FILE)
 
-# =========================
+# ============================================================
 # LOAD TOKENIZER
-# =========================
+# ============================================================
 
 with open("tokenizer.pkl", "rb") as file:
     tokenizer = pickle.load(file)
 
-# =========================
+# ============================================================
 # LOAD LABEL ENCODER
-# =========================
+# ============================================================
 
 with open("label_encoder.pkl", "rb") as file:
     encoder = pickle.load(file)
 
-# =========================
+# ============================================================
 # STOPWORDS
-# =========================
+# ============================================================
 
 stop_words = set(stopwords.words('english'))
 
-# =========================
+# ============================================================
 # MAX LENGTH
-# =========================
+# ============================================================
 
 max_length = 120
 
 # ============================================================
-# PREPROCESSING FUNCTION
+# PREPROCESS FUNCTION
 # ============================================================
 
 def preprocess_text(text):
@@ -240,24 +318,13 @@ with st.sidebar:
     ### Features
     ✔ Emotion Detection  
     ✔ Confidence Analysis  
-    ✔ Sentiment Visualization  
+    ✔ Probability Visualization  
     ✔ Wellness Guidance  
     ✔ Deep Learning Prediction  
     """)
 
-    st.markdown("---")
-
-    st.info("""
-    This application uses:
-    
-    - TensorFlow
-    - NLP
-    - LSTM / RNN
-    - Streamlit
-    """)
-
 # ============================================================
-# HEADER SECTION
+# HEADER
 # ============================================================
 
 st.markdown("""
@@ -282,31 +349,29 @@ st.markdown("""
 ## 📘 About the Project
 
 This AI-powered system analyzes emotional sentiment
-from user text messages using Natural Language Processing (NLP)
-and Deep Learning techniques.
+from user text messages using NLP and Deep Learning.
 
 ### 🌟 Importance of Emotional AI
-- Monitor emotional well-being
-- Detect negative sentiment patterns
-- Support mental health awareness
-- Assist counselors with early intervention
+- Emotional Well-being Monitoring
+- Sentiment Detection
+- Mental Health Awareness
+- Early Intervention Support
 
 ### 🤖 NLP Applications
 - Sentiment Analysis
-- Mental Health Monitoring
-- Intelligent Chatbots
+- AI Chatbots
 - Recommendation Systems
+- Mental Health Monitoring
 
 ### 🔁 Role of RNN
-Recurrent Neural Networks (RNNs) process text sequentially
-and remember previous words using hidden states,
-helping the model understand emotional context.
+RNN processes text sequentially and remembers
+previous words using hidden states.
 
 </div>
 """, unsafe_allow_html=True)
 
 # ============================================================
-# USER INPUT SECTION
+# INPUT SECTION
 # ============================================================
 
 st.markdown("""
@@ -336,7 +401,7 @@ analyze = st.button("🔍 Analyze Emotion")
 st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================================
-# PREDICTION SECTION
+# PREDICTION OUTPUT
 # ============================================================
 
 if analyze:
@@ -350,7 +415,7 @@ if analyze:
         emotion, confidence, probabilities = predict_emotion(user_input)
 
         # ====================================================
-        # RESULTS
+        # RESULT SECTION
         # ====================================================
 
         st.markdown("""
@@ -400,7 +465,7 @@ if analyze:
         st.markdown("</div>", unsafe_allow_html=True)
 
         # ====================================================
-        # VISUALIZATION
+        # GRAPH SECTION
         # ====================================================
 
         st.markdown("""
@@ -428,7 +493,7 @@ if analyze:
         st.markdown("</div>", unsafe_allow_html=True)
 
         # ====================================================
-        # WELLNESS GUIDANCE
+        # GUIDANCE SECTION
         # ====================================================
 
         st.markdown("""
@@ -445,50 +510,42 @@ if analyze:
 ### 🌼 Suggested Activities
 - Take a short walk
 - Listen to calming music
-- Talk to a trusted friend
-- Practice meditation
-- Write your thoughts in a journal
+- Meditation
+- Journaling
+- Talk to trusted people
 """)
 
         elif "anxiety" in emotion_lower or "stress" in emotion_lower:
 
             st.warning("""
 ### 🌿 Stress Management Tips
-- Try deep breathing exercises
+- Deep breathing exercises
+- Yoga & Meditation
+- Nature walks
+- Reduce overthinking
 - Focus on one task at a time
-- Avoid overthinking
-- Practice yoga or meditation
-- Spend time outdoors
 """)
 
         elif "happy" in emotion_lower or "positive" in emotion_lower:
 
             st.success("""
 ### ✨ Positive Emotional State
-Wonderful! Continue activities that:
+Great to hear positive emotions.
+
+Continue activities that:
 - Keep you motivated
-- Improve your productivity
+- Improve productivity
 - Maintain emotional balance
-""")
-
-        elif "normal" in emotion_lower:
-
-            st.info("""
-### 🌸 Healthy Lifestyle Tips
-- Maintain proper sleep
-- Eat healthy food
-- Stay socially connected
-- Exercise regularly
 """)
 
         else:
 
-            st.write("""
-### 💖 General Wellness Advice
-Practice self-care, stay connected
-with supportive people,
-and engage in activities
-that improve emotional well-being.
+            st.info("""
+### 💖 General Wellness Tips
+- Maintain proper sleep
+- Exercise regularly
+- Stay socially connected
+- Practice self-care
 """)
 
         st.markdown("</div>", unsafe_allow_html=True)
@@ -504,7 +561,7 @@ st.markdown("""
 
 🧠 AI-Based Mental Health Sentiment Monitoring System
 
-Built using TensorFlow, NLP, Deep Learning, LSTM & Streamlit
+Built using TensorFlow, NLP, Deep Learning & Streamlit
 
 </div>
 """, unsafe_allow_html=True)
