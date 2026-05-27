@@ -1,0 +1,10 @@
+
+tensorflow
+streamlit
+kagglehub
+nltk
+scikit-learn
+matplotlib
+pandas
+numpy
+h5py
