@@ -1,6 +1,6 @@
 # ============================================================
 # AI-Based Mental Health Sentiment Monitoring System
-# Streamlit Application
+# Professional Streamlit Web Application
 # ============================================================
 
 # =========================
@@ -14,6 +14,7 @@ import pickle
 import re
 import nltk
 import matplotlib.pyplot as plt
+import pandas as pd
 import gdown
 import os
 
@@ -28,47 +29,95 @@ from tensorflow.keras.models import load_model
 nltk.download('stopwords')
 
 # =========================
-# PAGE CONFIG
+# PAGE CONFIGURATION
 # =========================
 
 st.set_page_config(
-    page_title="Mental Health Sentiment Monitoring",
+    page_title="Mental Health AI Monitor",
     page_icon="🧠",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 # =========================
-# CUSTOM CSS
+# CUSTOM CSS STYLING
 # =========================
 
 st.markdown("""
 <style>
 
-.main {
-    background-color: #f5f7fa;
+html, body, [class*="css"]  {
+    font-family: 'Segoe UI', sans-serif;
 }
 
-h1 {
-    color: #4A148C;
+/* Main background */
+.stApp {
+    background: linear-gradient(to right, #eef2f3, #dfe9f3);
+}
+
+/* Main title */
+.main-title {
     text-align: center;
+    font-size: 48px;
+    font-weight: bold;
+    color: #4A148C;
+    margin-bottom: 5px;
 }
 
-h2, h3 {
+/* Subtitle */
+.sub-title {
+    text-align: center;
+    font-size: 22px;
     color: #6A1B9A;
+    margin-bottom: 30px;
 }
 
+/* Cards */
+.card {
+    background-color: white;
+    padding: 25px;
+    border-radius: 20px;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+}
+
+/* Text area */
+textarea {
+    border-radius: 15px !important;
+    border: 2px solid #6A1B9A !important;
+    padding: 15px !important;
+    font-size: 18px !important;
+}
+
+/* Button */
 .stButton>button {
     width: 100%;
-    background-color: #6A1B9A;
+    background: linear-gradient(to right, #6A1B9A, #8E24AA);
     color: white;
-    border-radius: 10px;
-    height: 3em;
-    font-size: 18px;
+    border-radius: 12px;
+    height: 3.5em;
+    font-size: 20px;
     border: none;
+    font-weight: bold;
 }
 
-.stTextArea textarea {
-    border-radius: 10px;
+/* Prediction boxes */
+.result-box {
+    padding: 20px;
+    border-radius: 15px;
+    color: white;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    color: #555;
+    padding-top: 20px;
+    font-size: 16px;
 }
 
 </style>
@@ -125,7 +174,7 @@ stop_words = set(stopwords.words('english'))
 max_length = 120
 
 # ============================================================
-# PREPROCESS FUNCTION
+# PREPROCESSING FUNCTION
 # ============================================================
 
 def preprocess_text(text):
@@ -175,56 +224,100 @@ def predict_emotion(text):
     return predicted_label, confidence, prediction[0]
 
 # ============================================================
+# SIDEBAR
+# ============================================================
+
+with st.sidebar:
+
+    st.image(
+        "https://cdn-icons-png.flaticon.com/512/3774/3774299.png",
+        width=120
+    )
+
+    st.title("🧠 Mental Health AI")
+
+    st.markdown("""
+    ### Features
+    ✔ Emotion Detection  
+    ✔ Confidence Analysis  
+    ✔ Sentiment Visualization  
+    ✔ Wellness Guidance  
+    ✔ Deep Learning Prediction  
+    """)
+
+    st.markdown("---")
+
+    st.info("""
+    This application uses:
+    
+    - TensorFlow
+    - NLP
+    - LSTM / RNN
+    - Streamlit
+    """)
+
+# ============================================================
 # HEADER SECTION
 # ============================================================
 
 st.markdown("""
-# 🧠 AI-Based Mental Health Sentiment Monitoring System
-""")
+<div class="main-title">
+AI-Based Mental Health Sentiment Monitoring System
+</div>
+""", unsafe_allow_html=True)
 
 st.markdown("""
-### Emotion Detection using Simple Recurrent Neural Networks
-""")
-
-st.markdown("---")
+<div class="sub-title">
+Emotion Detection using Deep Learning & Recurrent Neural Networks
+</div>
+""", unsafe_allow_html=True)
 
 # ============================================================
-# ABOUT PROJECT
+# ABOUT SECTION
 # ============================================================
 
-st.subheader("📘 About the Project")
+st.markdown("""
+<div class="card">
 
-st.write("""
+## 📘 About the Project
+
 This AI-powered system analyzes emotional sentiment
-from user text messages using NLP and Deep Learning.
+from user text messages using Natural Language Processing (NLP)
+and Deep Learning techniques.
 
-### Importance of Emotional AI
-- Monitors emotional well-being
-- Detects negative sentiment patterns
-- Supports early intervention
+### 🌟 Importance of Emotional AI
+- Monitor emotional well-being
+- Detect negative sentiment patterns
+- Support mental health awareness
+- Assist counselors with early intervention
 
-### NLP Applications
+### 🤖 NLP Applications
 - Sentiment Analysis
 - Mental Health Monitoring
-- Chatbots
+- Intelligent Chatbots
 - Recommendation Systems
 
-### Role of RNN in Sequence Learning
-RNN learns sequential text patterns and remembers
-previous words using hidden states.
-""")
+### 🔁 Role of RNN
+Recurrent Neural Networks (RNNs) process text sequentially
+and remember previous words using hidden states,
+helping the model understand emotional context.
 
-st.markdown("---")
+</div>
+""", unsafe_allow_html=True)
 
 # ============================================================
 # USER INPUT SECTION
 # ============================================================
 
+st.markdown("""
+<div class="card">
+""", unsafe_allow_html=True)
+
 st.subheader("✍️ Enter Your Thoughts")
 
-st.write("### Example Sentences")
+st.markdown("""
+### 💬 Example Sentences
 
-st.write("""
 - I feel anxious and stressed today
 - Nobody understands my feelings
 - I am extremely happy and motivated
@@ -233,15 +326,14 @@ st.write("""
 """)
 
 user_input = st.text_area(
-    "Enter your thoughts or feelings here...",
-    height=180
+    "",
+    placeholder="Enter your thoughts or feelings here...",
+    height=220
 )
 
-# ============================================================
-# BUTTON
-# ============================================================
-
 analyze = st.button("🔍 Analyze Emotion")
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================================
 # PREDICTION SECTION
@@ -251,43 +343,75 @@ if analyze:
 
     if user_input.strip() == "":
 
-        st.warning("Please enter some text.")
+        st.warning("⚠ Please enter some text.")
 
     else:
 
         emotion, confidence, probabilities = predict_emotion(user_input)
 
-        st.markdown("---")
+        # ====================================================
+        # RESULTS
+        # ====================================================
 
-        st.subheader("📊 Prediction Output")
+        st.markdown("""
+        <div class="card">
+        """, unsafe_allow_html=True)
 
-        st.success(f"Emotion Detected: {emotion}")
+        st.subheader("📊 Prediction Results")
 
-        st.info(f"Confidence Score: {round(confidence,2)}%")
+        col1, col2, col3 = st.columns(3)
 
-        # Emotional Status
-        if confidence >= 90:
-            status = "Strong Emotional Signal"
+        with col1:
 
-        elif confidence >= 70:
-            status = "Moderate Emotional Signal"
+            st.markdown(f"""
+            <div class="result-box" style="background:#6A1B9A;">
+            Emotion<br>{emotion}
+            </div>
+            """, unsafe_allow_html=True)
 
-        else:
-            status = "Low Emotional Signal"
+        with col2:
 
-        st.warning(f"Emotional Status: {status}")
+            st.markdown(f"""
+            <div class="result-box" style="background:#00897B;">
+            Confidence<br>{round(confidence,2)}%
+            </div>
+            """, unsafe_allow_html=True)
 
-        st.markdown("---")
+        with col3:
+
+            if confidence >= 90:
+                status = "Strong Signal"
+                color = "#D32F2F"
+
+            elif confidence >= 70:
+                status = "Moderate Signal"
+                color = "#F57C00"
+
+            else:
+                status = "Low Signal"
+                color = "#1976D2"
+
+            st.markdown(f"""
+            <div class="result-box" style="background:{color};">
+            Status<br>{status}
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
         # ====================================================
         # VISUALIZATION
         # ====================================================
 
-        st.subheader("📈 Sentiment Confidence Graph")
+        st.markdown("""
+        <div class="card">
+        """, unsafe_allow_html=True)
+
+        st.subheader("📈 Sentiment Confidence Visualization")
 
         class_labels = encoder.classes_
 
-        fig, ax = plt.subplots(figsize=(10,5))
+        fig, ax = plt.subplots(figsize=(12,5))
 
         ax.bar(class_labels, probabilities)
 
@@ -301,11 +425,15 @@ if analyze:
 
         st.pyplot(fig)
 
-        st.markdown("---")
+        st.markdown("</div>", unsafe_allow_html=True)
 
         # ====================================================
-        # EMOTIONAL GUIDANCE
+        # WELLNESS GUIDANCE
         # ====================================================
+
+        st.markdown("""
+        <div class="card">
+        """, unsafe_allow_html=True)
 
         st.subheader("💡 Emotional Wellness Guidance")
 
@@ -314,65 +442,69 @@ if analyze:
         if "depression" in emotion_lower or "sad" in emotion_lower:
 
             st.error("""
-Take a short break and talk to someone you trust.
-
-Positive Activities:
-- Walking
-- Listening to music
-- Meditation
-- Journaling
+### 🌼 Suggested Activities
+- Take a short walk
+- Listen to calming music
+- Talk to a trusted friend
+- Practice meditation
+- Write your thoughts in a journal
 """)
 
         elif "anxiety" in emotion_lower or "stress" in emotion_lower:
 
             st.warning("""
-Try deep breathing exercises and relaxation techniques.
-
-Positive Activities:
-- Yoga
-- Meditation
-- Reading
-- Nature walks
+### 🌿 Stress Management Tips
+- Try deep breathing exercises
+- Focus on one task at a time
+- Avoid overthinking
+- Practice yoga or meditation
+- Spend time outdoors
 """)
 
         elif "happy" in emotion_lower or "positive" in emotion_lower:
 
             st.success("""
-Great to hear positive emotions!
-
-Continue activities that keep you motivated
-and emotionally healthy.
+### ✨ Positive Emotional State
+Wonderful! Continue activities that:
+- Keep you motivated
+- Improve your productivity
+- Maintain emotional balance
 """)
 
         elif "normal" in emotion_lower:
 
             st.info("""
-Maintain a balanced lifestyle with:
-- Proper sleep
-- Healthy diet
-- Exercise
-- Social interaction
+### 🌸 Healthy Lifestyle Tips
+- Maintain proper sleep
+- Eat healthy food
+- Stay socially connected
+- Exercise regularly
 """)
 
         else:
 
             st.write("""
-Practice self-care and stay connected
-with supportive people.
+### 💖 General Wellness Advice
+Practice self-care, stay connected
+with supportive people,
+and engage in activities
+that improve emotional well-being.
 """)
+
+        st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================================
 # FOOTER
 # ============================================================
 
-st.markdown("---")
-
 st.markdown("""
-<center>
+<div class="footer">
 
-AI-Based Mental Health Sentiment Monitoring System
+<hr>
 
-Built using TensorFlow, NLP, LSTM, and Streamlit
+🧠 AI-Based Mental Health Sentiment Monitoring System
 
-</center>
+Built using TensorFlow, NLP, Deep Learning, LSTM & Streamlit
+
+</div>
 """, unsafe_allow_html=True)
