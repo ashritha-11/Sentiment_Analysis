@@ -1,6 +1,6 @@
 # ============================================================
 # AI-Based Mental Health Sentiment Monitoring System
-# Ultra Professional Streamlit Application
+# Clean Professional Streamlit Application
 # ============================================================
 
 # =========================
@@ -34,74 +34,73 @@ nltk.download('stopwords')
 st.set_page_config(
     page_title="Mental Health AI",
     page_icon="🧠",
-    layout="wide",
-    initial_sidebar_state="expanded"
+    layout="wide"
 )
 
 # ============================================================
-# THEME SELECTION
+# THEME TOGGLE
 # ============================================================
 
-theme = st.sidebar.toggle("🌙 Dark Mode")
+dark_mode = st.sidebar.toggle("🌙 Dark Mode")
 
 # ============================================================
-# LIGHT THEME
+# LIGHT THEME CSS
 # ============================================================
 
 light_css = """
 <style>
 
 .stApp {
-    background: #F5F7FA;
+    background-color: #F4F6F9;
     color: black;
 }
 
 .main-title {
     text-align: center;
-    font-size: 50px;
+    font-size: 48px;
     font-weight: 800;
     color: #5E35B1;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
 }
 
 .subtitle {
     text-align: center;
-    color: #666;
     font-size: 20px;
-    margin-bottom: 25px;
+    color: #666666;
+    margin-bottom: 30px;
 }
 
 .card {
     background: white;
     padding: 25px;
     border-radius: 18px;
-    box-shadow: 0px 5px 15px rgba(0,0,0,0.08);
-    margin-bottom: 25px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
 }
 
 .metric-card {
     background: linear-gradient(to right, #673AB7, #7E57C2);
     padding: 20px;
     border-radius: 15px;
-    text-align: center;
     color: white;
-}
-
-textarea {
-    border-radius: 12px !important;
-    border: 2px solid #673AB7 !important;
-    font-size: 18px !important;
+    text-align: center;
 }
 
 .stButton>button {
     width: 100%;
-    height: 3.5em;
+    height: 3.3em;
     border-radius: 12px;
     border: none;
     background: linear-gradient(to right, #673AB7, #8E24AA);
     color: white;
     font-size: 18px;
     font-weight: bold;
+}
+
+textarea {
+    border-radius: 12px !important;
+    border: 2px solid #673AB7 !important;
+    font-size: 18px !important;
 }
 
 .footer {
@@ -114,38 +113,38 @@ textarea {
 """
 
 # ============================================================
-# DARK THEME
+# DARK THEME CSS
 # ============================================================
 
 dark_css = """
 <style>
 
 .stApp {
-    background: #0E1117;
+    background-color: #0E1117;
     color: white;
 }
 
 .main-title {
     text-align: center;
-    font-size: 50px;
+    font-size: 48px;
     font-weight: 800;
     color: #BB86FC;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
 }
 
 .subtitle {
     text-align: center;
-    color: #CCCCCC;
     font-size: 20px;
-    margin-bottom: 25px;
+    color: #CCCCCC;
+    margin-bottom: 30px;
 }
 
 .card {
     background: #161B22;
     padding: 25px;
     border-radius: 18px;
-    box-shadow: 0px 5px 15px rgba(255,255,255,0.05);
-    margin-bottom: 25px;
+    box-shadow: 0px 4px 12px rgba(255,255,255,0.05);
+    margin-bottom: 20px;
     color: white;
 }
 
@@ -153,21 +152,13 @@ dark_css = """
     background: linear-gradient(to right, #7B1FA2, #9C27B0);
     padding: 20px;
     border-radius: 15px;
-    text-align: center;
     color: white;
-}
-
-textarea {
-    border-radius: 12px !important;
-    border: 2px solid #BB86FC !important;
-    background: #1F2937 !important;
-    color: white !important;
-    font-size: 18px !important;
+    text-align: center;
 }
 
 .stButton>button {
     width: 100%;
-    height: 3.5em;
+    height: 3.3em;
     border-radius: 12px;
     border: none;
     background: linear-gradient(to right, #7B1FA2, #AB47BC);
@@ -176,9 +167,17 @@ textarea {
     font-weight: bold;
 }
 
+textarea {
+    border-radius: 12px !important;
+    border: 2px solid #BB86FC !important;
+    background-color: #1E1E1E !important;
+    color: white !important;
+    font-size: 18px !important;
+}
+
 .footer {
     text-align: center;
-    color: #BBBBBB;
+    color: #CCCCCC;
     margin-top: 30px;
 }
 
@@ -189,7 +188,7 @@ textarea {
 # APPLY THEME
 # ============================================================
 
-if theme:
+if dark_mode:
     st.markdown(dark_css, unsafe_allow_html=True)
 else:
     st.markdown(light_css, unsafe_allow_html=True)
@@ -206,7 +205,11 @@ if not os.path.exists(MODEL_FILE):
 
     url = f"https://drive.google.com/uc?id={file_id}"
 
-    gdown.download(url, MODEL_FILE, quiet=False)
+    gdown.download(
+        url,
+        MODEL_FILE,
+        quiet=False
+    )
 
 # ============================================================
 # LOAD MODEL & FILES
@@ -284,26 +287,21 @@ def predict_emotion(text):
 
 with st.sidebar:
 
-    st.image(
-        "https://cdn-icons-png.flaticon.com/512/3774/3774299.png",
-        width=130
-    )
-
     st.title("🧠 Mental Health AI")
 
     st.markdown("""
-    ### Features
+    ### System Features
     
     ✔ Emotion Detection  
-    ✔ Sentiment Analysis  
-    ✔ Confidence Score  
-    ✔ Emotional Guidance  
-    ✔ Deep Learning Prediction
+    ✔ Confidence Analysis  
+    ✔ NLP Processing  
+    ✔ RNN Prediction  
+    ✔ Wellness Guidance
     """)
 
     st.markdown("---")
 
-    st.success("AI Model Accuracy: 94%")
+    st.success("Model Accuracy: 94%")
 
 # ============================================================
 # HEADER
@@ -322,12 +320,12 @@ Emotion Detection using NLP & Deep Learning
 """, unsafe_allow_html=True)
 
 # ============================================================
-# TOP METRICS
+# METRICS SECTION
 # ============================================================
 
-col1, col2, col3, col4 = st.columns(4)
+m1, m2, m3, m4 = st.columns(4)
 
-with col1:
+with m1:
     st.markdown("""
     <div class='metric-card'>
     <h2>94%</h2>
@@ -335,7 +333,7 @@ with col1:
     </div>
     """, unsafe_allow_html=True)
 
-with col2:
+with m2:
     st.markdown("""
     <div class='metric-card'>
     <h2>7+</h2>
@@ -343,7 +341,7 @@ with col2:
     </div>
     """, unsafe_allow_html=True)
 
-with col3:
+with m3:
     st.markdown("""
     <div class='metric-card'>
     <h2>RNN</h2>
@@ -351,7 +349,7 @@ with col3:
     </div>
     """, unsafe_allow_html=True)
 
-with col4:
+with m4:
     st.markdown("""
     <div class='metric-card'>
     <h2>NLP</h2>
@@ -368,7 +366,7 @@ st.write("")
 left, right = st.columns([2,1])
 
 # ============================================================
-# LEFT SECTION
+# INPUT SECTION
 # ============================================================
 
 with left:
@@ -377,7 +375,7 @@ with left:
     <div class='card'>
     """, unsafe_allow_html=True)
 
-    st.subheader("✍️ Analyze Your Emotion")
+    st.subheader("✍️ Analyze Emotion")
 
     user_input = st.text_area(
         "",
@@ -399,20 +397,15 @@ with right:
     <div class='card'>
     """, unsafe_allow_html=True)
 
-    st.subheader("💡 Quick Tips")
+    st.subheader("💡 Emotional Wellness Tips")
 
     st.info("""
     ✔ Stay hydrated  
     ✔ Practice mindfulness  
     ✔ Take regular breaks  
-    ✔ Talk to supportive people  
-    ✔ Sleep well
+    ✔ Sleep properly  
+    ✔ Stay socially connected
     """)
-
-    st.image(
-        "https://cdn-icons-png.flaticon.com/512/4320/4320337.png",
-        use_container_width=True
-    )
 
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -431,7 +424,7 @@ if analyze:
         emotion, confidence, probabilities = predict_emotion(user_input)
 
         # ====================================================
-        # RESULT CARDS
+        # RESULT SECTION
         # ====================================================
 
         st.markdown("""
@@ -457,23 +450,23 @@ if analyze:
         with c3:
 
             if confidence >= 90:
-                status = "Strong"
+                signal = "Strong"
 
             elif confidence >= 70:
-                status = "Moderate"
+                signal = "Moderate"
 
             else:
-                status = "Low"
+                signal = "Low"
 
             st.metric(
                 "Signal",
-                status
+                signal
             )
 
         st.markdown("</div>", unsafe_allow_html=True)
 
         # ====================================================
-        # CHART
+        # CHART SECTION
         # ====================================================
 
         st.markdown("""
@@ -488,7 +481,7 @@ if analyze:
 
         ax.bar(class_labels, probabilities)
 
-        ax.set_xlabel("Emotions")
+        ax.set_xlabel("Emotion")
 
         ax.set_ylabel("Probability")
 
@@ -501,7 +494,7 @@ if analyze:
         st.markdown("</div>", unsafe_allow_html=True)
 
         # ====================================================
-        # GUIDANCE
+        # GUIDANCE SECTION
         # ====================================================
 
         st.markdown("""
@@ -515,27 +508,29 @@ if analyze:
         if "depression" in emotion_lower or "sad" in emotion_lower:
 
             st.error("""
-Take a break, talk to someone you trust,
+Take a short break, talk to supportive people,
 and engage in calming activities.
 """)
 
         elif "anxiety" in emotion_lower or "stress" in emotion_lower:
 
             st.warning("""
-Practice deep breathing and mindfulness exercises.
+Practice mindfulness, deep breathing,
+and relaxation exercises.
 """)
 
         elif "happy" in emotion_lower or "positive" in emotion_lower:
 
             st.success("""
-Great emotional state detected.
-Keep doing activities that motivate you.
+Positive emotional state detected.
+Continue healthy and motivating activities.
 """)
 
         else:
 
             st.info("""
-Maintain healthy habits and emotional balance.
+Maintain emotional balance,
+healthy sleep, and regular exercise.
 """)
 
         st.markdown("</div>", unsafe_allow_html=True)
@@ -551,7 +546,7 @@ st.markdown("""
 
 🧠 AI-Based Mental Health Monitoring System
 
-Built with TensorFlow • NLP • RNN • Streamlit
+Built using TensorFlow • NLP • RNN • Streamlit
 
 </div>
 """, unsafe_allow_html=True)
