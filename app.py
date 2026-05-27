@@ -1,4 +1,3 @@
-
 # ============================================================
 # AI-Based Mental Health Sentiment Monitoring System
 # Streamlit Application
@@ -15,6 +14,8 @@ import pickle
 import re
 import nltk
 import matplotlib.pyplot as plt
+import gdown
+import os
 
 from nltk.corpus import stopwords
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -63,6 +64,7 @@ h2, h3 {
     border-radius: 10px;
     height: 3em;
     font-size: 18px;
+    border: none;
 }
 
 .stTextArea textarea {
@@ -72,11 +74,29 @@ h2, h3 {
 </style>
 """, unsafe_allow_html=True)
 
+# ============================================================
+# DOWNLOAD MODEL FROM GOOGLE DRIVE
+# ============================================================
+
+MODEL_FILE = "mental_health_rnn_model.h5"
+
+if not os.path.exists(MODEL_FILE):
+
+    file_id = "1m4xu6JUNdMEAYyeoAsvZCCsuPBmeewdN"
+
+    url = f"https://drive.google.com/uc?id={file_id}"
+
+    gdown.download(
+        url,
+        MODEL_FILE,
+        quiet=False
+    )
+
 # =========================
 # LOAD MODEL
 # =========================
 
-model = load_model("mental_health_rnn_model.h5")
+model = load_model(MODEL_FILE)
 
 # =========================
 # LOAD TOKENIZER
